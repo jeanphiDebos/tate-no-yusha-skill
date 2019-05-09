@@ -1,0 +1,81 @@
+{
+  "nodes": [
+    {
+      "index": 0, 
+      "links": [], 
+      "score": 7.35923957824707, 
+      "level": 1, 
+      "title": "Blood Diamond", 
+      "cover": "http://image.tmdb.org/t/p/w342/wRamTzV6udKaMXrspxqOuo02zk0.jpg", 
+      "label": "Blood Diamond (2006)", 
+      "director": "Edward Zwick", 
+      "cast": "Leonardo DiCaprio, Djimon Hounsou, Jennifer Connelly, Arnold Vosloo, David Harewood, Jimi Mistry, Michael Sheen, Marius Weyers, Stephen Collins, Ato Essandoh", 
+      "year": 2006, 
+      "duration": "143 minutes", 
+      "genre": "Action, Drama, Adventure, Thriller", 
+      "id": 1768448
+    }, 
+    {
+      "index": 1, 
+      "links": [], 
+      "score": 7.167639255523682, 
+      "level": 2, 
+      "title": "Lonely Hearts", 
+      "cover": "http://image.tmdb.org/t/p/w342/wxsyl5wjobtYhll3rf5nGuC4kBN.jpg", 
+      "label": "Lonely Hearts (2006)", 
+      "director": "Todd Robinson", 
+      "cast": "John Travolta, James Gandolfini, Salma Hayek, Jared Leto, Laura Dern, Dan Byrd, Alice Krige, Dagmara Dominczyk, Bailee Madison", 
+      "year": 2006, 
+      "duration": "108 minutes", 
+      "genre": "Drama, Romance, Thriller, Crime", 
+      "id": 1758379
+    }, 
+    {
+      "index": 2, 
+      "links": [], 
+      "score": 7.554875373840332, 
+      "level": 2, 
+      "title": "The Hangover Part II", 
+      "cover": "http://image.tmdb.org/t/p/w342/hFUsdnUoQDQ02EVlKTyhDTdehEr.jpg", 
+      "label": "The Hangover Part II (2011)", 
+      "director": "Todd Phillips", 
+      "cast": "Bradley Cooper, Zach Galifianakis, Justin Bartha, Ed Helms, Ken Jeong, Mike Tyson, Jamie Chung, Paul Giamatti, Jeffrey Tambor, Mason Lee", 
+      "year": 2011, 
+      "duration": "102 minutes", 
+      "genre": "Comedy", 
+      "id": 5
+    }, 
+    {
+      "index": 3, 
+      "links": [], 
+      "score": 7.812180042266846, 
+      "level": 1, 
+      "title": "Casablanca", 
+      "cover": "http://image.tmdb.org/t/p/w342/sm1QVZu5RKe1vXVHZooo4SZyHMx.jpg", 
+      "label": "Casablanca (1942)", 
+      "director": "Michael Curtiz", 
+      "cast": "Humphrey Bogart, Ingrid Bergman, Paul Henreid, Claude Rains, Conrad Veidt, Sydney Greenstreet, Peter Lorre, Madeleine Lebeau, Dooley Wilson, Joy Page", 
+      "year": 1942, 
+      "duration": "102 minutes", 
+      "genre": "Drama, Romance, War, Crime", 
+      "id": 1750024
+    }
+  ], 
+  "links": [
+    {
+      "source": 0, 
+      "target": 1, 
+      "weight": 0.1
+    }, 
+    {
+      "source": 0, 
+      "target": 2, 
+      "weight": 0.5
+    }, 
+    {
+      "source": 2, 
+      "target": 3, 
+      "weight": 0.9
+    }
+  ]
+}
