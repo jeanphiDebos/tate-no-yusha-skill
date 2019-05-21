@@ -1,31 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block body_attributes %}class="secure-login"{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+  <div class="container-fluid page-create page-login page-reset-password">
+    <div class="row">
+      <div class="col-sm-offset-3 col-sm-6 text-center">
+        <h2>tate-no-yusha-skill</h2>
+        <hr>
+        <div class="login-container">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+            
+            <form method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail" class="sr-only">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                <div class="formgroup">
+                <label for="inputUserName">{{ 'security.login.username'|trans }}</label>
+                    <input type="text" value="{{ last_username }}" name="name" id="inputUserName" class="form-control" placeholder="UserName" required autofocus>
+                </div>
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+                <div class="formgroup">
+                <label for="inputPassword">{{ 'security.login.password'|trans }}</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                </div>
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
+                <div class="checkbox mb-3">
+                    <label><input type="checkbox" name="_remember_me">{{ 'security.login.remember_me'|trans }}</label>
+                </div>
+
+                <button class="btn btn-lg btn-primary" type="submit">{{ 'security.login.submit'|trans }}</button>
+            </form>
+        </div>
+      </div>
     </div>
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+  </div>
 {% endblock %}

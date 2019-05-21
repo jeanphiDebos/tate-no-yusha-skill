@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div id="nocontent">
+            <h1>Sadly your browser is not compatible with this site</h1>
+            <div>You can use <a href="http://www.google.com/chrome/">Google
+            Chrome</a>, <a href="http://www.mozilla.org/firefox">Mozilla Firefox</a>
+            or <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">Microsoft
+            Internet Explorer (v9 or above)</a> to access the PopCha Movie
+            Network</div>
+        </div>
+
+        <div id="movieNetwork"></div>
+
+        <div id="sidepanel">
+            <div id="title">
+            <a href="javascript:void(0);" onClick="zoomCall(0.5);" style="pointer-events: all;">+</a>
+            <a href="javascript:void(0);" onClick="zoomCall(-0.5);" style="pointer-events: all;">-</a>
+            </div>
+            <div id="movieInfo" class="panel_off"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('build/js/app.js') }}"></script>
+{% endblock %}
