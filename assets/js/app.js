@@ -9,8 +9,6 @@ $.ajaxSetup({
 });
 
 $(document).ready(function () {
-    console.log('test');
-    
     if( ie && ie < 9 ) {
         D3notok();
     } else {
@@ -25,6 +23,16 @@ $(document).ready(function () {
         console.log('test2');
     }
 });
+
+// Highlight a movie in the graph. It is a closure within the d3.json() call.
+var selectMovie = undefined;
+// Change status of a panel from visible to hidden or viceversa
+var toggleDiv = undefined;
+// Clear all help boxes and select a movie in network and in movie details panel
+var clearAndSelect = undefined;
+// The call to set a zoom value -- currently unused
+// (zoom is set via standard mouse-based zooming)
+var zoomCall = undefined;
 
 var ie = (function() {
     var undef,
@@ -45,16 +53,6 @@ function D3notok() {
     body.style.backgroundImage = "url('movie-network-screenshot-d.png')";
     body.style.backgroundRepeat = "no-repeat";
 }
-
-// Highlight a movie in the graph. It is a closure within the d3.json() call.
-var selectMovie = undefined;
-// Change status of a panel from visible to hidden or viceversa
-var toggleDiv = undefined;
-// Clear all help boxes and select a movie in network and in movie details panel
-var clearAndSelect = undefined;
-// The call to set a zoom value -- currently unused
-// (zoom is set via standard mouse-based zooming)
-var zoomCall = undefined;
 
 // Do the stuff -- to be called after D3.js has loaded
 function D3ok() {
@@ -89,7 +87,7 @@ function D3ok() {
         .linkStrength(function (d, idx) { return d.weight; });
 
     // Add to the page the SVG element that will contain the movie network
-    var svg = d3.select("#movieNetwork").append("svg:svg")
+    var svg = d3.select("#panel-skill").append("svg:svg")
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr("width", WIDTH)
         .attr("height", HEIGHT)

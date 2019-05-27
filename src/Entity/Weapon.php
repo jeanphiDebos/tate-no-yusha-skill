@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\WeaponRepository")
@@ -32,13 +35,18 @@ class Weapon
     private $image;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="weapon", cascade={"persist", "remove"})
+     * @var File
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="weapon")
      * @ORM\JoinColumn(nullable=false)
      */
     private $player;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Skill", mappedBy="weapon", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Skill", mappedBy="weapon", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $skills;
 
@@ -84,6 +92,18 @@ class Weapon
     public function setImage(string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->image ? new File($this->image) : $this->imageFile;
+    }
+
+    public function setImageFile(File $imageFile): self
+    {
+        $this->imageFile = $imageFile;
 
         return $this;
     }
@@ -139,5 +159,13 @@ class Weapon
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string) $this->name;
     }
 }
