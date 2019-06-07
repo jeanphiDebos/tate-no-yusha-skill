@@ -8,6 +8,7 @@ easy_admin:
                     - 'name'
                     - 'description'
                     - 'cost'
+                    - 'enable'
                     - 'weapon'
                     - 'skillParent'
             new:
@@ -32,7 +33,6 @@ easy_admin:
         User:
             class: App\Entity\User
             list:
-                title: 'app.admin.list.user'
                 fields:
                     - 'username'
                     - 'lvl'

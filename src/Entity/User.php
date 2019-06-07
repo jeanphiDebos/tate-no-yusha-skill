@@ -6,11 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields="email", message="Email already taken")
  * @UniqueEntity(fields="name", message="Username already taken")
+ * @ApiResource
  */
 class User implements UserInterface
 {
@@ -52,11 +55,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
      */
     private $lvl;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Weapon", mappedBy="player", cascade={"persist", "remove"})
+     * @ApiSubresource
      */
     private $weapon;
 

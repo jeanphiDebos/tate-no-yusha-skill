@@ -3,12 +3,33 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SkillRepository")
+ * @ApiResource(attributes={
+ *     "normalization_context"={"groups"={"skill"}}
+ * })
+ * @ApiFilter(OrderFilter::class, properties={"id", "name"})
+ * @ApiFilter(SearchFilter::class, properties={
+ *   "id": "exact",
+ *   "name": "partial",
+ *   "weapon.id": "exact",
+ *   "weapon.name": "partial",
+ *   "skillParent.id": "exact",
+ *   "skillParent.name": "partial"
+ * })
+ * 
+ * https://api-platform.com/docs/core/filters/
  */
 class Skill
 {
@@ -16,21 +37,26 @@ class Skill
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid", unique=true)
+     * @Groups("skill")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Groups("skill")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("skill")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("skill")
      */
     private $image;
 
@@ -41,28 +67,43 @@ class Skill
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank
+     * @Groups("skill")
      */
     private $cost;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @Assert\NotBlank
+     * @Groups("skill")
+     */
+    private $enable;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Weapon", inversedBy="skills")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank
+     * @Groups("skill")
      */
     private $weapon;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Skill", inversedBy="childSkill")
+     * @ApiSubresource(maxDepth=1)
      */
     private $skillParent;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Skill", mappedBy="skillParent")
+     * @ApiSubresource(maxDepth=1)
+     * @Groups("skill")
      */
     private $childSkill;
 
     public function __construct()
     {
         $this->childSkill = new ArrayCollection();
+        $this->enable     = false;
     }
 
     public function getId(): ?string
@@ -126,6 +167,18 @@ class Skill
     public function setCost(int $cost): self
     {
         $this->cost = $cost;
+
+        return $this;
+    }
+
+    public function getEnable(): ?bool
+    {
+        return $this->enable;
+    }
+
+    public function setEnable(bool $enable): self
+    {
+        $this->enable = $enable;
 
         return $this;
     }

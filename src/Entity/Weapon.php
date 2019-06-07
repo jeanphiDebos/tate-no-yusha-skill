@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\WeaponRepository")
+ * @ApiResource
  */
 class Weapon
 {
@@ -21,6 +25,7 @@ class Weapon
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -42,11 +47,14 @@ class Weapon
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="weapon")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
+     * @ApiSubresource
      */
     private $player;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Skill", mappedBy="weapon", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ApiSubresource
      */
     private $skills;
 

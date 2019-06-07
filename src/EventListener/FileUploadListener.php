@@ -27,11 +27,16 @@ class FileUploadListener implements EventSubscriberInterface
         ];
     }
 
-    public function postImage(GenericEvent $event) {
+    public function postImage(GenericEvent $event)
+    {
         $entity = $event->getSubject();
         $method = $event->getArgument('request')->getMethod();
 
-        if (!($entity instanceof Skill) && !($entity instanceof Weapon) && $method !== Request::METHOD_POST) {
+        if (!($entity instanceof Skill) && !($entity instanceof Weapon)) {
+            return;
+        }
+
+        if ($method !== Request::METHOD_POST) {
             return;
         }
 
