@@ -2,23 +2,42 @@
 
 {% block body %}
     <div class="container">
-        <div id="nocontent">
-            <h1>Sadly your browser is not compatible with this site</h1>
-            <div>You can use <a href="http://www.google.com/chrome/">Google
-            Chrome</a>, <a href="http://www.mozilla.org/firefox">Mozilla Firefox</a>
-            or <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">Microsoft
-            Internet Explorer (v9 or above)</a> to access the PopCha Movie
-            Network</div>
-        </div>
-
         <div id="panel-skill"></div>
 
         <div id="sidepanel">
             <div id="title">
-            <a href="javascript:void(0);" onClick="zoomCall(0.5);" style="pointer-events: all;">+</a>
-            <a href="javascript:void(0);" onClick="zoomCall(-0.5);" style="pointer-events: all;">-</a>
+            <span id="zoom">+</span>
+            <span id="unzoom">-</span>
             </div>
-            <div id="movieInfo" class="panel_off"></div>
+        </div>
+
+        <div class="modal fade" id="skill-info" tabindex="-1" role="dialog" aria-labelledby="skill-info-modal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="skill-info-titre" class="modal-title"></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img id="skill-info-image">
+                                </div>
+                                <hr class="hidden-md hidden-lg hidden-xl">
+                                <div class="col-md-8">
+                                    <div class="col-md-12">
+                                        <span>{% trans %}cost{% endtrans %}</span> : <span id="skill-info-cost"></span>
+                                    </div>
+                                    <div id="skill-info-description" class="col-md-12"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -2,6 +2,8 @@ var Encore = require('@symfony/webpack-encore');
 
 Encore
     .setOutputPath('public/build/')
+    // .setPublicPath('/build')
+    // for dev
     .setPublicPath('/test/tate-no-yusha-skill/public/build')
     .setManifestKeyPrefix('build')
     .cleanupOutputBeforeBuild()
@@ -17,14 +19,7 @@ Encore
         jQuery: 'jquery',
         'window.jQuery': 'jquery'
     })
-    // .splitEntryChunks()
-    // .enableSingleRuntimeChunk()
-    // .enableBuildNotifications()
-    // .configureBabel(() => {}, {
-    //     useBuiltIns: 'usage',
-    //     corejs: 3
-    // })
-    .enableVersioning(Encore.isProduction())
+    .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
 ;
 

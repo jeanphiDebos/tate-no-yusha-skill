@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SkillRepository")
@@ -28,6 +29,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *   "skillParent.id": "exact",
  *   "skillParent.name": "partial"
  * })
+ * @ApiFilter(ExistsFilter::class, properties={"skillParent"})
  * 
  * https://api-platform.com/docs/core/filters/
  */
@@ -74,7 +76,6 @@ class Skill
 
     /**
      * @ORM\Column(type="boolean")
-     * @Assert\NotBlank
      * @Groups("skill")
      */
     private $enable;
@@ -83,7 +84,6 @@ class Skill
      * @ORM\ManyToOne(targetEntity="App\Entity\Weapon", inversedBy="skills")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank
-     * @Groups("skill")
      */
     private $weapon;
 
