@@ -1,14 +1,11 @@
-/* ---------------------------------------------------------------------------
-   (c) Telefónica I+D, 2013
-   Author: Paulo Villegas
-   ------------------------------------------------------------------------- */
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$fa-font-path: "~font-awesome/fonts";
 
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
-   body {
-    background-color: #f6f6f6;
+body {
+  background-color: #ccc;
 }
-
-/* HREF links */
 
 a {
     color: blue;
@@ -22,9 +19,6 @@ a:hover {
 a:visited {
     color: blue;
 }
-
-/* ....................................................................... */
-/* The top-right side panel and its title child */
 
 div#sidepanel {
     position: absolute;
@@ -60,10 +54,6 @@ img#helpIcon {
     cursor: help;
 } 
 
-
-/* ....................................................................... */
-/* On/off toggles for the help/info panels */
-
 div.panel_off {
     visibility: hidden;
     pointer-events: none;
@@ -73,10 +63,6 @@ div.panel_on {
     visibility: visible;
     pointer-events: all;
 }
-
-
-/* ....................................................................... */
-/* Help boxes */
 
 div#help {
     margin: 6px;
@@ -157,9 +143,6 @@ div#close_faq {
     padding: 0px;
 }
 
-
-/* ....................................................................... */
-
 div#nocontent {
     visibility: hidden;
     pointer-events: none;
@@ -185,10 +168,7 @@ div#nocontent h1 {
     font-weight: bold;
 }
 
-/* ....................................................................... */
-/* Movie details panel */
-
-div#movieInfo {
+div#skillInfo {
     position: relative;
     right: 4px;
     cursor: text;
@@ -203,77 +183,69 @@ div#movieInfo {
     text-align: right;
 }
 
-div#movieInfo div#cover {
+div#skillInfo div#cover {
     text-align: left; 
     height: 300px;
 }
 
-div#movieInfo div.t {
+div#skillInfo div.t {
     font-size: 14px;
     font-weight: bold;
 }
 
-div#movieInfo img.cover {
+div#skillInfo img.cover {
     margin-bottom: 6px;
     position: absolute;
     right: 3px;
 }
 
-div#movieInfo img.action {
+div#skillInfo img.action {
     cursor: pointer;
     position: absolute;
 }
 
-div#movieInfo div.f {
+div#skillInfo div.f {
     border-top: 1px dotted #8E5981;
     margin-bottom: 3px;
     margin-top: 3px;
 }
 
-div#movieInfo span.d {
+div#skillInfo span.d {
     font-weight: bold;
 }
 
-div#movieInfo span.c {
+div#skillInfo span.c {
     font-style: italic;
 }
 
-div#movieInfo span.l {
+div#skillInfo span.l {
     font-size: 11px;
     color: #24553E;
     font-variant: small-caps;
 }
 
-/* ....................................................................... */
-/* SVG elements */
-
-div#movieNetwork svg {
+div#skillNetwork svg {
     background-color: white;
     cursor: move;
 }
 
 line.link {
-    stroke: #B2D9D8;
+    stroke: #868686;
 }
 
 circle {
-    cursor: crosshair;
+    cursor: pointer;
     fill: #EBC763;
 }
 
-circle.level1 {
+circle.enable {
     stroke: #f00;
 }
 
-circle.level2 {
+circle.disable {
     fill-opacity: 0.8;
     stroke-opacity: 0.8;
     stroke: #777;
-}
-
-circle.level3 {
-    fill-opacity: 0.5;
-    stroke-opacity: 0.5;
 }
 
 circle.sibling {
@@ -286,9 +258,6 @@ circle.main {
     fill: #732A9A;
     fill-opacity: 1.0;
 }
-
-/* ....................................................................... */
-/* Graph labels */
 
 g.gLabel {
     font: 10px sans-serif;
@@ -332,11 +301,6 @@ text.main {
     font-weight: bold;
 }
 
-
-/* ....................................................................... */
-
-/* no longer used */
-
 .nlabel_on {
     visibility: visible;
     font-size: 12px;
@@ -359,4 +323,13 @@ text.main {
     z-index:1000;
     text-align:center;
     background: rgba(222,223,163,0.8);
+}
+
+#skill-info-image{
+    max-width: 100%;
+}
+
+#zoom, #unzoom {
+    pointer-events: all;
+    cursor: pointer;
 }

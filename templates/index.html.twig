@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div id="panel-skill"></div>
+
+        <div id="sidepanel">
+            <div id="title">
+            <span id="zoom">+</span>
+            <span id="unzoom">-</span>
+            </div>
+        </div>
+
+        <div class="modal fade" id="skill-info" tabindex="-1" role="dialog" aria-labelledby="skill-info-modal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="skill-info-titre" class="modal-title"></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <img id="skill-info-image">
+                                </div>
+                                <hr class="hidden-md hidden-lg hidden-xl">
+                                <div class="col-md-8">
+                                    <div class="col-md-12">
+                                        <span>{% trans %}cost{% endtrans %}</span> : <span id="skill-info-cost"></span>
+                                    </div>
+                                    <div id="skill-info-description" class="col-md-12"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans %}Close{% endtrans %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('build/js/app.js') }}"></script>
+{% endblock %}

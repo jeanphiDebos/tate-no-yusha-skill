@@ -1,36 +1,61 @@
-// For MSIE < 9, forget it
-function D3notok() {
-    document.getElementById('sidepanel').style.visibility = 'hidden';
-    var nocontent = document.getElementById('nocontent');
-    nocontent.style.visibility = 'visible';
-    nocontent.style.pointerEvents = 'all';
-    var t = document.getElementsByTagName('body');
-    var body = document.getElementsByTagName('body')[0];
-    body.style.backgroundImage = "url('movie-network-screenshot-d.png')";
-    body.style.backgroundRepeat = "no-repeat";
-}
+/*
+ * not need look autoProvideVariables in webpack.config.js
+ * const $ = require('jquery');
+ */
+/*
+ * @todo reforge this app.js to use node d3
+ * const d3 = require('d3');
+ */
 
-// Highlight a movie in the graph. It is a closure within the d3.json() call.
-var selectMovie = undefined;
+require('bootstrap-sass');
+var d3 = require('d3');
+
+$.ajaxSetup({
+  contentType: "application/json; charset=utf-8"
+});
+
+// Highlight a skill in the graph. It is a closure within the d3.json() call.
+var selectSkill = undefined;
 // Change status of a panel from visible to hidden or viceversa
 var toggleDiv = undefined;
-// Clear all help boxes and select a movie in network and in movie details panel
+// Clear all help boxes and select a skill in network and in skill details panel
 var clearAndSelect = undefined;
-// The call to set a zoom value -- currently unused
-// (zoom is set via standard mouse-based zooming)
-var zoomCall = undefined;
+// The call to set a zoom value -- currently unused (zoom is set via standard mouse-based zooming)
+
+$(document).ready(function () {
+    var graphArray = {'nodes' : [], 'links': []};
+    var idUser = $('body').data('user-id');
+
+    $.get('api/users/' + idUser + '/weapon', 'json').done(function (data) {
+        graphArray.nodes.push({
+            'id': data.id,
+            'name': data.name,
+            'type': 'arme',
+            'label': data.name,
+            'index': 0,
+            'description': data.description,
+            'image': data.image,
+            'enable': true,
+        });
+        D3ok(idUser, graphArray);
+    }).fail(function (data) {
+      console.error("error: ajax get weapon for users: " + idUser);
+    })
+});
 
 // Do the stuff -- to be called after D3.js has loaded
-function D3ok() {
+function D3ok(idUser, graphArray) {
     // Some constants
-    var WIDTH = 960,
-        HEIGHT = 600,
+    var WIDTH = $('#panel-skill').width(),
+        HEIGHT = $(window).height()-20,
         SHOW_THRESHOLD = 2.5;
 
     // Variables keeping graph state
-    var activeMovie = undefined;
+    var activeSkill = undefined;
+    var zoomCall = undefined;
     var currentOffset = { x: 0, y: 0 };
-    var currentZoom = 1.0;
+    var currentZoom = 1.5;
+    var indexGraphArray = 1;
 
     // The D3.js scales
     var xScale = d3.scale.linear()
@@ -52,8 +77,8 @@ function D3ok() {
         .size([WIDTH, HEIGHT])
         .linkStrength(function (d, idx) { return d.weight; });
 
-    // Add to the page the SVG element that will contain the movie network
-    var svg = d3.select("#movieNetwork").append("svg:svg")
+    // Add to the page the SVG element that will contain the skill network
+    var svg = d3.select("#panel-skill").append("svg:svg")
         .attr('xmlns', 'http://www.w3.org/2000/svg')
         .attr("width", WIDTH)
         .attr("height", HEIGHT)
@@ -61,8 +86,8 @@ function D3ok() {
         .attr("viewBox", "0 0 " + WIDTH + " " + HEIGHT)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    // Movie panel: the div into which the movie details info will be written
-    movieInfoDiv = d3.select("#movieInfo");
+    // Skill panel: the div into which the skill details info will be written
+    skillInfoDiv = d3.select("#skillInfo");
 
     /* ....................................................................... */
 
@@ -100,7 +125,6 @@ function D3ok() {
         return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
     }
 
-
     /* Change status of a panel from visible to hidden or viceversa
        id: identifier of the div to change
        status: 'on' or 'off'. If not specified, the panel will toggle status
@@ -113,66 +137,68 @@ function D3ok() {
         return false;
     }
 
-
-    /* Clear all help boxes and select a movie in the network and in the 
-       movie details panel
+    /* Clear all help boxes and select a skill in the network and in the 
+       skill details panel
     */
     clearAndSelect = function (id) {
         toggleDiv('faq', 'off');
         toggleDiv('help', 'off');
-        selectMovie(id, true);	// we use here the selectMovie() closure
+        selectSkill(id, true);	// we use here the selectSkill() closure
     }
 
-
-    /* Compose the content for the panel with movie details.
+    /* Compose the content for the panel with skill details.
        Parameters: the node data, and the array containing all nodes
     */
-    function getMovieInfo(n, nodeArray) {
-        //@todo replace this to modal boostrap
-        info = '<div id="cover">';
-        if (n.cover)
-            info += '<img class="cover" height="300" src="' + n.cover + '" title="' + n.label + '"/>';
-        else
-            info += '<div class=t style="float: right">' + n.title + '</div>';
-        info +=
-            '<img src="close.png" class="action" style="top: 0px;" title="close panel" onClick="toggleDiv(\'movieInfo\');"/>' +
-            '<img src="target-32.png" class="action" style="top: 280px;" title="center graph on movie" onclick="selectMovie(' + n.index + ',true);"/>';
-
-        info += '<br/></div><div style="clear: both;">'
-        if (n.genre)
-            info += '<div class=f><span class=l>Genre</span>: <span class=g>'
-                + n.genre + '</span></div>';
-        if (n.director)
-            info += '<div class=f><span class=l>Directed by</span>: <span class=d>'
-                + n.director + '</span></div>';
-        if (n.cast)
-            info += '<div class=f><span class=l>Cast</span>: <span class=c>'
-                + n.cast + '</span></div>';
-        if (n.duration)
-            info += '<div class=f><span class=l>Year</span>: ' + n.year
-                + '<span class=l style="margin-left:1em;">Duration</span>: '
-                + n.duration + '</div>';
-        if (n.links) {
-            info += '<div class=f><span class=l>Related to</span>: ';
-            n.links.forEach(function (idx) {
-                info += '[<a href="javascript:void(0);" onclick="selectMovie('
-                    + idx + ',true);">' + nodeArray[idx].label + '</a>]'
-            });
-            info += '</div>';
+    function getSkillInfo(n, nodeArray) {
+        $('#skill-info').modal();
+        $('#skill-info-titre').empty().append(n.name);
+        $('#skill-info-description').empty().append(n.description);
+        $('#skill-info-image').attr('src', n.image);
+        $('#skill-info-cost').empty().append(n.cost);
+        if (n.type === 'arme') {
+            $('#skill-info-cost').parent().hide();
+        } else {
+            $('#skill-info-cost').parent().show();
         }
-        return info;
     }
 
+    function initGraphArray(array, finalArray, isChild) {
+        array.forEach(function (element) {
+            finalArray.nodes.push({
+                'id': element.id,
+                'type': 'skill',
+                'label': element.name,
+                'name': element.name,
+                'index': indexGraphArray,
+                'enable': element.enable,
+                'description': element.description,
+                'image': element.image,
+                'cost': element.cost,
+                'enable': element.enable,
+            });
+            finalArray.links.push({
+                'source': isChild,
+                'target': indexGraphArray,
+                'weight': 1,
+            });
+            indexGraphArray++;
+            if (element.childSkill) {
+                finalArray = initGraphArray(element.childSkill, finalArray, indexGraphArray-1);
+            }
+        });
+
+        return finalArray;
+    }
 
     // *************************************************************************
-
     d3.json(
-        'test.json',
+        'api/users/' + idUser + '/weapon/skills?skillParent%5Bexists%5D=false',
         function (data) {
-
             // Declare the variables pointing to the node & link arrays
-            var nodeArray = data.nodes;
-            var linkArray = data.links;
+            graphArray = initGraphArray(data, graphArray, 0);
+
+            var nodeArray = graphArray.nodes;
+            var linkArray = graphArray.links;
 
             minLinkWeight = Math.min.apply(null, linkArray.map(function (n) { return n.weight; }));
             maxLinkWeight = Math.max.apply(null, linkArray.map(function (n) { return n.weight; }));
@@ -190,7 +216,7 @@ function D3ok() {
                 .clamp(true);
             var edge_width = d3.scale.pow().exponent(8)
                 .domain([minLinkWeight, maxLinkWeight])
-                .range([1, 3])
+                .range([5, 10])
                 .clamp(true);
 
             /* Add drag & zoom behaviours */
@@ -219,14 +245,10 @@ function D3ok() {
                 .data(nodeArray, function (d) { return d.id; })
                 .enter().append("svg:circle")
                 .attr('id', function (d) { return "c" + d.index; })
-                .attr('class', function (d) { return 'node level' + d.level; })
-                // .attr('r', function (d) { return node_size(40); })
-                .attr('r', 16)
-                .attr('pointer-events', 'all')
-                //.on("click", function(d) { highlightGraphNode(d,true,this); } )    
-                .on("click", function (d) { showMoviePanel(d); })
-                .on("mouseover", function (d) { highlightGraphNode(d, true, this); })
-                .on("mouseout", function (d) { highlightGraphNode(d, false, this); });
+                .attr('class', function (d) { return 'node ' + ((d.enable) ? 'enable' : 'disable'); })
+                .attr('r', function (d) { return (d.type === 'arme') ? 24 : node_size(16); })
+                .attr('pointer-events', 'all')  
+                .on("click", function (d) { showSkillPanel(d); });
 
             // labels: a group with two SVG text: a title and a shadow (as background)
             var graphLabels = networkGraph.append('svg:g').attr('class', 'grp gLabel')
@@ -262,10 +284,10 @@ function D3ok() {
             function highlightGraphNode(node, on) {
                 //if( d3.event.shiftKey ) on = false; // for debugging
 
-                // If we are to activate a movie, and there's already one active,
+                // If we are to activate a skill, and there's already one active,
                 // first switch that one off
-                if (on && activeMovie !== undefined) {
-                    highlightGraphNode(nodeArray[activeMovie], false);
+                if (on && activeSkill !== undefined) {
+                    highlightGraphNode(nodeArray[activeSkill], false);
                 }
 
                 // locate the SVG nodes: circle & label group
@@ -274,23 +296,23 @@ function D3ok() {
 
                 // activate/deactivate the node itself
                 circle.classed('main', on);
-                label.classed('on', on || currentZoom >= SHOW_THRESHOLD);
+                label.classed('on', on);
                 label.selectAll('text').classed('main', on);
 
-                // set the value for the current active movie
-                activeMovie = on ? node.index : undefined;
+                // set the value for the current active skill
+                activeSkill = on ? node.index : undefined;
             }
 
 
             /* --------------------------------------------------------------------- */
-            /* Show the details panel for a movie AND highlight its node in 
+            /* Show the details panel for a skill AND highlight its node in 
                the graph. Also called from outside the d3.json context.
                Parameters:
-               - new_idx: index of the movie to show
+               - new_idx: index of the skill to show
                - doMoveTo: boolean to indicate if the graph should be centered
-                 on the movie
+                 on the skill
             */
-            selectMovie = function (new_idx, doMoveTo) {
+            selectSkill = function (new_idx, doMoveTo) {
                 // do we want to center the graph on the node?
                 doMoveTo = doMoveTo || false;
                 if (doMoveTo) {
@@ -303,20 +325,17 @@ function D3ok() {
                     };
                     repositionGraph(offset, undefined, 'move');
                 }
-                // Now highlight the graph node and show its movie panel
+                // Now highlight the graph node and show its skill panel
                 highlightGraphNode(nodeArray[new_idx], true);
-                showMoviePanel(nodeArray[new_idx]);
+                showSkillPanel(nodeArray[new_idx]);
             }
 
 
             /* --------------------------------------------------------------------- */
-            /* Show the movie details panel for a given node
+            /* Show the skill details panel for a given node
              */
-            function showMoviePanel(node) {
-                // Fill it and display the panel
-                movieInfoDiv
-                    .html(getMovieInfo(node, nodeArray))
-                    .attr("class", "panel_on");
+            function showSkillPanel(node) {
+                getSkillInfo(node, nodeArray);
             }
 
 
@@ -325,7 +344,7 @@ function D3ok() {
                - on node repositioning (as result of a force-directed iteration)
                - on translations (user is panning)
                - on zoom changes (user is zooming)
-               - on explicit node highlight (user clicks in a movie panel link)
+               - on explicit node highlight (user clicks in a skill panel link)
                Set also the values keeping track of current offset & zoom values
             */
             function repositionGraph(off, z, mode) {
@@ -403,12 +422,6 @@ function D3ok() {
                 if (currentZoom == newZoom)
                     return;	// no zoom change
 
-                // See if we cross the 'show' threshold in either direction
-                if (currentZoom < SHOW_THRESHOLD && newZoom >= SHOW_THRESHOLD)
-                    svg.selectAll("g.label").classed('on', true);
-                else if (currentZoom >= SHOW_THRESHOLD && newZoom < SHOW_THRESHOLD)
-                    svg.selectAll("g.label").classed('on', false);
-
                 // See what is the current graph window size
                 s = getViewportSize();
                 width = s.w < WIDTH ? s.w : WIDTH;
@@ -425,19 +438,39 @@ function D3ok() {
                 repositionGraph(newOffset, newZoom, "zoom");
             }
 
-            zoomCall = doZoom;	// unused, so far
-
             /* --------------------------------------------------------------------- */
+
+            $("#zoom").click(function() {
+                doZoom(0.5);
+            });
+
+            $("#unzoom").click(function() {
+                doZoom(-0.5);
+            });
 
             /* process events from the force-directed graph */
             force.on("tick", function () {
                 repositionGraph(undefined, undefined, 'tick');
             });
 
-            /* A small hack to start the graph with a movie pre-selected */
+            /* A small hack to start the graph with a skill pre-selected */
             mid = getQStringParameterByName('id')
-            if (mid != null)
+            if (mid != null) {
                 clearAndSelect(mid);
+            }
+
+            setTimeout(function() {
+                s = getViewportSize();
+                width = s.w < WIDTH ? s.w : WIDTH;
+                height = s.h < HEIGHT ? s.h : HEIGHT;
+                offset = {
+                    x: s.x + width / 2 - nodeArray[0].x * currentZoom,
+                    y: s.y + height / 2 - nodeArray[0].y * currentZoom
+                };
+                repositionGraph(offset, undefined, 'move');
+                highlightGraphNode(nodeArray[0], true);
+                svg.selectAll("g.label").classed('on', true);
+            }, 2000);
         }
     );
 }

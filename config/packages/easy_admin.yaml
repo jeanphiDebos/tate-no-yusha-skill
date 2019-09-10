@@ -1,0 +1,57 @@
+easy_admin:
+    site_name: 'Tate No Yusha Skill'
+    entities:
+        Skill:
+            class: App\Entity\Skill
+            form:
+                fields:
+                    - 'name'
+                    - 'description'
+                    - 'cost'
+                    - { property: 'enable', type_options: { required: false} }
+                    - 'weapon'
+                    - 'skillParent'
+            new:
+                fields:
+                    - {property: 'imageFile', type: 'file'}
+            edit:
+                fields:
+                    - { property: 'imageFile', type: 'file', type_options: { required: false} }
+        Weapon:
+            class: App\Entity\Weapon
+            form:
+                fields:
+                    - 'name'
+                    - 'description'
+                    - 'player'
+            new:
+                fields:
+                    - {property: 'imageFile', type: 'file'}
+            edit:
+                fields:
+                    - { property: 'imageFile', type: 'file', type_options: { required: false} }
+        User:
+            class: App\Entity\User
+            list:
+                fields:
+                    - 'username'
+                    - 'lvl'
+            form:
+                fields:
+                    - 'email'
+                    - 'name'
+                    - 'lvl'
+                    - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_SUPER_ADMIN': 'ROLE_SUPER_ADMIN' } } }
+            show:
+                fields:
+                    - 'id'
+                    - 'name'
+                    - 'email'
+                    - 'lvl'
+                    - 'roles'
+            new:
+                fields:
+                    - { property: 'plainPassword', type_options: { required: true} }
+            edit:
+                fields:
+                    - { property: 'plainPassword', type_options: { required: false} }
