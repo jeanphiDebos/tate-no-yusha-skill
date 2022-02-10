@@ -4,7 +4,7 @@
         "bootstrap-sass": "^3.3.7",
         "core-js": "^3.0.0",
         "jquery": "^3.2.1",
-        "node-sass": "^4.12.0",
+        "node-sass": "^7.0.0",
         "sass-loader": "^7.0.1",
         "webpack-notifier": "^1.6.0"
     },
